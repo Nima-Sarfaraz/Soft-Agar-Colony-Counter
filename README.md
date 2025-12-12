@@ -88,9 +88,9 @@ git clone https://github.com/Nima-Sarfaraz/Soft-Agar-Colony-Counter.git
 1. Open **Terminal**
 2. Navigate to the folder where you extracted the files:
    ```bash
-   cd ~/Desktop/Soft-Agar-Colony-Counter
+   cd ~/Desktop/Soft-Agar-Colony-Counter-master
    ```
-   (adjust the path if you put it somewhere else)
+   > **Note:** The folder may be named `Soft-Agar-Colony-Counter-master` or `Soft-Agar-Colony-Counter` depending on how you downloaded it.
 3. Make the script executable (first time only):
    ```bash
    chmod +x start.sh
@@ -115,8 +115,9 @@ git clone https://github.com/Nima-Sarfaraz/Soft-Agar-Colony-Counter.git
 1. Press `Win + R`, type `cmd`, press Enter
 2. Navigate to the folder:
    ```
-   cd C:\Users\YourName\Desktop\Soft-Agar-Colony-Counter
+   cd C:\Users\YourName\Desktop\Soft-Agar-Colony-Counter-master
    ```
+   > **Note:** The folder may be named `Soft-Agar-Colony-Counter-master` or `Soft-Agar-Colony-Counter` depending on how you downloaded it.
 3. Run: `start.bat`
 
 </details>
