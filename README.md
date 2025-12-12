@@ -183,10 +183,25 @@ Once the application is running in your browser:
 
 ---
 
+## Features
+
+- **Web UI:** Browser-based interface with drag-and-drop upload, live parameter tuning, and manual annotation
+- **CLI:** Batch processing for automated workflows (see [CONTRIBUTING.md](CONTRIBUTING.md) for CLI usage)
+- **FastAPI Backend:** REST API for programmatic access
+
+---
+
+## Example Data
+
+`examples/data/` contains sample HepG2 and Huh7 plate images for testing and demos.
+See `examples/README.md` for tutorials.
+
+---
+
 ## Security Notice
 
 This project takes supply-chain security seriously. In light of recent npm ecosystem
-attacks (e.g., Shai-Hulud), we've implemented several protective measures:
+attacks, we've implemented several protective measures:
 
 ### Recommended Deployment Methods (Safest First)
 
@@ -202,152 +217,10 @@ attacks (e.g., Shai-Hulud), we've implemented several protective measures:
 - **Install scripts disabled**: `frontend/.npmrc` sets `ignore-scripts=true`
 - **Local-only binding**: Server binds to `127.0.0.1` by default
 
-### For Developers Building from Source
-
-When building the frontend locally, be aware that `npm ci` will download and
-install ~250 third-party packages. While we've taken precautions:
-
-- Review the `package-lock.json` if you have concerns
-- Consider building in a container or VM for isolation
-- Avoid storing sensitive credentials in environment variables during builds
-- The pre-built `frontend/dist/` avoids npm entirely if you prefer
-
 For more information on npm supply-chain security, see:
 [Snyk's npm security guide](https://snyk.io/blog/ten-npm-security-best-practices/)
 
 ---
-
-## Features
-
-- **Web UI:** Browser-based interface with drag-and-drop upload, live parameter tuning, and manual annotation
-- **CLI:** Batch processing for automated workflows
-- **FastAPI Backend:** REST API for programmatic access
-
-## Architecture Overview
-
-- **Engine (`softagar.engine`)** – OpenCV/NumPy pipeline that accepts in-memory
-  images and returns colony metadata (counts, coordinates, masks).
-- **CLI (`softagar.cli`)** – Batch processing front-end that walks folders,
-  calls the engine, and writes CSV summaries.
-- **API (`api.main`)** – FastAPI service that wraps uploads, detection, manual
-  annotations, and CSV export for web clients.
-- **Web UI (`frontend/`)** – React + Konva.js browser interface.
-
-## Installation (Developer)
-
-### Pip (recommended)
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -e .
-```
-
-Alternatively, install the exact pinned runtime stack (core + API extras) with:
-```bash
-pip install -r requirements.txt
-```
-
-### With optional FastAPI (API) extras
-```bash
-pip install -e ".[api]"
-```
-
-### Conda users
-```bash
-conda create -n softagar python=3.11 pip
-conda activate softagar
-pip install -e ".[api]"
-```
-
-## CLI Quickstart
-
-```bash
-softagar count \
-  --input examples/data/HepG2 \
-  --output results.csv \
-  --recursive \
-  --global-thresh 120 \
-  --min-area 400 \
-  --max-area 12000
-```
-
-- Input can be a single file or a folder.
-- Use `--recursive` to scan nested directories.
-- All detection parameters are surfaced as flags; omit them to stick with
-  sensible defaults (`softagar.cli` mirrors `softagar.engine.detect_colonies`).
-
-## Web UI
-
-The web interface provides:
-- Drag-and-drop image upload (supports TIFF, PNG, JPG)
-- Interactive parameter tuning with live preview
-- Click to add/remove colonies manually
-- CSV export of final counts
-
-### Running the Web UI (Development)
-
-```bash
-# Terminal 1: Start the API
-pip install -e ".[api]"
-uvicorn api.main:app --reload --port 8000
-
-# Terminal 2: Start the frontend dev server
-cd frontend
-npm install
-npm run dev
-```
-
-Visit http://localhost:5173 (dev) or http://localhost:8000 (production build).
-
-### API Endpoints (for automation)
-
-- `POST /upload` – Upload images, returns session_id and image_ids
-- `POST /process/{image_id}` – Run detection with parameters
-- `POST /annotations/{image_id}` – Save manual edits
-- `GET /results/{session_id}` – Download CSV
-
-## Example Data
-
-`examples/data/` contains sample HepG2 and Huh7 plate images for testing and demos.
-See `examples/README.md` for CLI workflow tutorials.
-
-## Citation
-
-If you use Soft Agar Colony Counter in a publication, please cite:
-
-> Sarfaraz, N. (2025). *Soft Agar Colony Counter* (Version 0.1.0) [Software].
-> https://github.com/Nima-Sarfaraz/Soft-Agar-Colony-Counter
-
-BibTeX:
-
-```bibtex
-@software{sarfaraz2025softagar,
-  author  = {Sarfaraz, Nima},
-  title   = {Soft Agar Colony Counter},
-  year    = {2025},
-  version = {0.1.0},
-  url     = {https://github.com/Nima-Sarfaraz/Soft-Agar-Colony-Counter}
-}
-```
-
-## Repository Layout
-
-```
-Colony_Counter/
-├── softagar/           # Python engine, CLI, IO helpers
-├── api/                # FastAPI backend
-├── frontend/           # React + Vite web interface
-├── examples/           # Sample images and tutorials
-├── tests/              # Unit tests
-├── assets/             # Screenshots
-├── Dockerfile          # Container build
-├── docker-compose.yml  # One-command startup
-├── start.sh            # macOS/Linux launcher
-├── start.bat           # Windows launcher
-├── pyproject.toml      # Python packaging
-├── LICENSE             # MIT license
-└── README.md
-```
 
 ## Troubleshooting
 
@@ -363,8 +236,8 @@ kill -9 <PID>
 - Try `docker compose build --no-cache`
 
 **Frontend not loading:**
-- Check that `frontend/dist/` exists (run `cd frontend && npm run build`)
-- Or use the dev server: `cd frontend && npm run dev`
+- Check that `frontend/dist/` exists
+- Try stopping and re-running `start.sh` or `start.bat`
 
 **Python dependency issues:**
 ```bash
@@ -375,10 +248,20 @@ source .venv/bin/activate
 pip install -e ".[api]"
 ```
 
+---
+
 ## Contributing
 
-See `CONTRIBUTING.md` for development workflow, coding standards, and release
-process. We welcome bug reports, feature requests, and pull requests!
+Want to contribute or use the CLI? See [CONTRIBUTING.md](CONTRIBUTING.md) for:
+- Development setup
+- Architecture overview
+- CLI usage
+- API endpoints
+- Coding standards
+
+We welcome bug reports, feature requests, and pull requests!
+
+---
 
 ## License
 
