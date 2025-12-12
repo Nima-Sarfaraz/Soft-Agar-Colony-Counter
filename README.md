@@ -140,7 +140,19 @@ Docker is a containerization platform that packages the app with all its depende
 1. Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 2. Start Docker Desktop and wait for it to fully load
 
-#### Step 2: Run with Docker
+#### Step 2: Download the Software
+
+**Option A: Download ZIP (easiest)**
+1. Click the green **Code** button at the top of this page
+2. Click **Download ZIP**
+3. Extract the ZIP file to a folder (e.g., your Desktop or Documents)
+
+**Option B: Using Git (if you have it installed)**
+```bash
+git clone https://github.com/Nima-Sarfaraz/Soft-Agar-Colony-Counter.git
+```
+
+#### Step 3: Run with Docker
 
 Open a terminal/command prompt in the project folder and run:
 ```bash
@@ -159,8 +171,9 @@ Once the application is running in your browser:
 
 1. **Upload Images** — Drag and drop your TIFF, PNG, or JPG files into the upload area (or click to browse)
 2. **Adjust Parameters** — Use the sliders on the left to tune detection sensitivity. Changes preview live.
-3. **Review & Edit** — Switch between View/Add/Remove modes to manually correct any missed or false colonies
-4. **Export Results** — Click "Export CSV" to download a spreadsheet with colony counts for all images
+3. **Review & Edit** — Switch between View/Add/Remove modes to manually correct any missed or false colonies by clicking on the annotation image itself (left). Counts are updated on the right side.
+4. **Move Between Files** - Click on the next file/image on the file browser to the right
+5. **Export Results** — Click "Export CSV" to download a spreadsheet with colony counts for all images when finished with all files/images
 
 **Tips:**
 - Use the **Split View** to see both your image and the detection mask side-by-side
