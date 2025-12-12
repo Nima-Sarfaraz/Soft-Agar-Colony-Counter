@@ -76,9 +76,16 @@ echo [OK] Starting server at http://localhost:8000
 echo Press Ctrl+C to stop
 echo.
 
-REM Open browser after a short delay (in background)
-start /b cmd /c "timeout /t 2 /nobreak >nul && start http://localhost:8000"
+REM Start server in background, wait for it to be ready, then open browser
+start /b uvicorn api.main:app --host 127.0.0.1 --port 8000
 
-REM Start the server
-uvicorn api.main:app --host 127.0.0.1 --port 8000
+REM Wait for server to respond (poll every 0.5s, up to 30s)
+echo [INFO] Waiting for server to be ready...
+powershell -Command "$timeout = 60; for ($i = 0; $i -lt $timeout; $i++) { try { $null = Invoke-WebRequest -Uri 'http://localhost:8000' -UseBasicParsing -TimeoutSec 1 -ErrorAction Stop; Start-Process 'http://localhost:8000'; exit 0 } catch { Start-Sleep -Milliseconds 500 } }; Write-Host 'Server taking longer than expected. Open http://localhost:8000 manually.'"
+
+REM Keep window open (server runs in background)
+echo.
+echo [OK] Browser opened. Server is running.
+echo Close this window or press Ctrl+C to stop the server.
+pause >nul
 

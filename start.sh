@@ -93,18 +93,27 @@ build_frontend() {
     fi
 }
 
-# Open browser (cross-platform)
-open_browser() {
+# Wait for server to be ready, then open browser
+wait_and_open_browser() {
     URL="http://localhost:8000"
-    sleep 2  # Wait for server to start
     
-    if command -v xdg-open &> /dev/null; then
-        xdg-open "$URL" &> /dev/null &
-    elif command -v open &> /dev/null; then
-        open "$URL" &
-    else
-        echo -e "${YELLOW}Open your browser to: $URL${NC}"
-    fi
+    # Wait up to 30 seconds for server to respond
+    for i in {1..60}; do
+        if curl -s "$URL" > /dev/null 2>&1; then
+            # Server is ready, open browser
+            if command -v xdg-open &> /dev/null; then
+                xdg-open "$URL" &> /dev/null &
+            elif command -v open &> /dev/null; then
+                open "$URL" &
+            else
+                echo -e "${YELLOW}Open your browser to: $URL${NC}"
+            fi
+            return 0
+        fi
+        sleep 0.5
+    done
+    
+    echo -e "${YELLOW}Server taking longer than expected. Open your browser to: $URL${NC}"
 }
 
 # Main
@@ -118,9 +127,13 @@ echo -e "${GREEN}Starting server at http://localhost:8000${NC}"
 echo -e "${YELLOW}Press Ctrl+C to stop${NC}"
 echo
 
-# Open browser in background
-open_browser &
+# Start server in background, wait for it, then open browser
+uvicorn api.main:app --host 127.0.0.1 --port 8000 &
+SERVER_PID=$!
 
-# Start the server
-exec uvicorn api.main:app --host 127.0.0.1 --port 8000
+# Wait for server to be ready, then open browser
+wait_and_open_browser
+
+# Bring server to foreground (wait for it, pass through Ctrl+C)
+wait $SERVER_PID
 
